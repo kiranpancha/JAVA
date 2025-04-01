@@ -1,0 +1,265 @@
+package java$projects;
+
+
+import java.util.*;
+
+class User {
+    private int id;
+    private String name;
+    private String contact;
+
+    public User(int id, String name, String contact) {
+        this.id = id;
+        this.name = name;
+        this.contact = contact;
+    }
+
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public String getContact() { return contact; }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Name: " + name + ", Contact: " + contact;
+    }
+}
+
+class Patient extends User {
+    private String medicalHistory;
+
+    public Patient(int id, String name, String contact, String medicalHistory) {
+        super(id, name, contact);
+        this.medicalHistory = medicalHistory;
+    }
+
+    public String getMedicalHistory() { return medicalHistory; }
+    public void setMedicalHistory(String medicalHistory) {
+        this.medicalHistory = medicalHistory;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Medical History: " + medicalHistory;
+    }
+}
+
+class Doctor extends User {
+    private String specialization;
+
+    public Doctor(int id, String name, String contact, String specialization) {
+        super(id, name, contact);
+        this.specialization = specialization;
+    }
+
+    public String getSpecialization() { return specialization; }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Specialization: " + specialization;
+    }
+}
+
+class Appointment {
+    private int appointmentId;
+    private Patient patient;
+    private Doctor doctor;
+    private String date;
+    private String time;
+    private String status;
+
+    public Appointment(int appointmentId, Patient patient, Doctor doctor, String date, String time) {
+        this.appointmentId = appointmentId;
+        this.patient = patient;
+        this.doctor = doctor;
+        this.date = date;
+        this.time = time;
+        this.status = "Pending";
+    }
+
+    public void confirmAppointment() { this.status = "Confirmed"; }
+    public void cancelAppointment() { this.status = "Cancelled"; }
+
+    @Override
+    public String toString() {
+        return "Appointment ID: " + appointmentId + ", Patient: " + patient.getName() + 
+               ", Doctor: " + doctor.getName() + ", Date: " + date + ", Time: " + time +
+               ", Status: " + status;
+    }
+}
+
+class Hospital {
+    private List<Patient> patients;
+    private List<Doctor> doctors;
+    private List<Appointment> appointments;
+
+    public Hospital() {
+        this.patients = new ArrayList<>();
+        this.doctors = new ArrayList<>();
+        this.appointments = new ArrayList<>();
+    }
+
+    public void addPatient(Patient patient) {
+        patients.add(patient);
+        System.out.println("Patient added successfully.");
+    }
+
+    public void addDoctor(Doctor doctor) {
+        doctors.add(doctor);
+        System.out.println("Doctor added successfully.");
+    }
+
+    public void bookAppointment(Appointment appointment) {
+        appointments.add(appointment);
+        System.out.println("Appointment booked successfully.");
+    }
+
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public List<Doctor> getDoctors() {
+        return doctors;
+    }
+
+    public void listPatients() {
+        if (patients.isEmpty()) {
+            System.out.println("No patients found.");
+        } else {
+            System.out.println("--- Patient List ---");
+            for (Patient patient : patients) {
+                System.out.println(patient);
+            }
+        }
+    }
+
+    public void listDoctors() {
+        if (doctors.isEmpty()) {
+            System.out.println("No doctors found.");
+        } else {
+            System.out.println("--- Doctor List ---");
+            for (Doctor doctor : doctors) {
+                System.out.println(doctor);
+            }
+        }
+    }
+
+    public void listAppointments() {
+        if (appointments.isEmpty()) {
+            System.out.println("No appointments found.");
+        } else {
+            System.out.println("--- Appointment List ---");
+            for (Appointment appointment : appointments) {
+                System.out.println(appointment);
+            }
+        }
+    }
+}
+
+public class Hospetal_Managemet  {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Hospital hospital = new Hospital();
+
+        while (true) {
+            System.out.println("\n--- Hospital Management System ---");
+            System.out.println("1. Add Patient");
+            System.out.println("2. Add Doctor");
+            System.out.println("3. Book Appointment");
+            System.out.println("4. List Patients");
+            System.out.println("5. List Doctors");
+            System.out.println("6. List Appointments");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Patient ID: ");
+                    int patientId = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter Patient Name: ");
+                    String patientName = scanner.nextLine();
+                    System.out.print("Enter Patient Contact: ");
+                    String patientContact = scanner.nextLine();
+                    System.out.print("Enter Medical History: ");
+                    String medicalHistory = scanner.nextLine();
+                    hospital.addPatient(new Patient(patientId, patientName, patientContact, medicalHistory));
+                    break;
+
+                case 2:
+                    System.out.print("Enter Doctor ID: ");
+                    int doctorId = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter Doctor Name: ");
+                    String doctorName = scanner.nextLine();
+                    System.out.print("Enter Doctor Contact: ");
+                    String doctorContact = scanner.nextLine();
+                    System.out.print("Enter Specialization: ");
+                    String specialization = scanner.nextLine();
+                    hospital.addDoctor(new Doctor(doctorId, doctorName, doctorContact, specialization));
+                    break;
+
+                case 3:
+                    System.out.print("Enter Appointment ID: ");
+                    int appointmentId = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter Patient ID for Appointment: ");
+                    int pId = scanner.nextInt();
+                    scanner.nextLine();
+                    Patient patient = hospital.getPatients().stream().filter(p -> p.getId() == pId).findFirst().orElse(null);
+
+                    if (patient == null) {
+                        System.out.println("Patient not found.");
+                        break;
+                    }
+
+                    System.out.print("Enter Doctor ID for Appointment: ");
+                    int dId = scanner.nextInt();
+                    scanner.nextLine();
+                    Doctor doctor = hospital.getDoctors().stream().filter(d -> d.getId() == dId).findFirst().orElse(null);
+
+                    if (doctor == null) {
+                        System.out.println("Doctor not found.");
+                        break;
+                    }
+
+                    System.out.print("Enter Appointment Date (YYYY-MM-DD): ");
+                    String date = scanner.nextLine();
+                    System.out.print("Enter Appointment Time (HH:MM): ");
+                    String time = scanner.nextLine();
+
+                    hospital.bookAppointment(new Appointment(appointmentId, patient, doctor, date, time));
+                    break;
+
+                case 4:
+                    hospital.listPatients();
+                    break;
+
+                case 5:
+                    hospital.listDoctors();
+                    break;
+
+                case 6:
+                    hospital.listAppointments();
+                    break;
+
+                case 7:
+                    System.out.println("Exiting... Goodbye!");
+                    scanner.close();
+                    System.exit(0);
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
+
+
