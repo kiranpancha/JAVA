@@ -1,0 +1,64 @@
+package project_02;
+
+import java.util.Scanner;
+
+class InvalidageException extends Exception {
+    public InvalidageException(String message) {
+        super(message);
+    }
+}
+
+class DL {
+    int age;
+    Scanner sc = new Scanner(System.in);
+
+    void acceptAge() {
+        System.out.println("Enter the Age:");
+        age = sc.nextInt();
+    }
+
+    void verify() throws InvalidageException {
+        if (age < 18) {
+            throw new InvalidageException("You are Under Age");
+        } else if (age <= 65) {
+            System.out.println("You are Eligible");
+        } else {
+            throw new InvalidageException("You are too OLD to get the Driving Licence");
+        }
+    }
+
+    void closeScanner() {
+        sc.close(); // Close the scanner once all input is done
+    }
+}
+
+class RTO {
+    void permit() {
+        DL dl = new DL();
+        int attempts = 3;
+        boolean isEligible = false;
+
+        for (int i = 0; i < attempts; i++) {
+            try {
+                dl.acceptAge();
+                dl.verify();
+                isEligible = true;
+                break;
+            } catch (InvalidageException e) {
+                if (i < attempts - 1) {
+                    System.out.println(e.getMessage() + ". Please try again.");
+                } else {
+                    System.out.println("Your Request for The DL is Blocked: " + e.getMessage());
+                }
+            }
+        }
+        dl.closeScanner();
+    }
+}
+
+public class Day54 {
+    public static void main(String[] args) {
+        RTO r = new RTO();
+        r.permit();
+    }
+}
