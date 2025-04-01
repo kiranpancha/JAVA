@@ -1,0 +1,36 @@
+package Exceptions;
+import java.util.Scanner;
+
+class Balence extends Exception {
+	String message;
+	public Balence(String message) {
+		this.message = message;
+	}
+	@Override
+	public String toString() {
+		return message;
+	}
+}
+public class E111 {
+	public static void main(String[] args) throws Balence {
+		try {
+			Scanner s = new Scanner(System.in);
+			System.out.println("Enter the Amount Deposit");
+			int current_Balence = s.nextInt();
+			System.out.println("Enter the Amount to withDrawal");
+			int n = s.nextInt();
+
+			if (current_Balence < n) {
+				throw new Balence("Insufficient Funds! Your Current Balence is " + current_Balence);
+			} else {
+				System.out.println("Take Your Money:" + n);
+				current_Balence = current_Balence - n;
+				System.out.println("The Balence Available After withdrawal is:" +current_Balence);
+			}
+
+		} catch (Exception ref) {
+			ref.printStackTrace();
+		}
+	}
+
+}
